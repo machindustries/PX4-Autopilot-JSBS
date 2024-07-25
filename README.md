@@ -1,138 +1,142 @@
-# PX4 Drone Autopilot
-
-[![Releases](https://img.shields.io/github/release/PX4/PX4-Autopilot.svg)](https://github.com/PX4/PX4-Autopilot/releases) [![DOI](https://zenodo.org/badge/22634/PX4/PX4-Autopilot.svg)](https://zenodo.org/badge/latestdoi/22634/PX4/PX4-Autopilot)
-
-[![Nuttx Targets](https://github.com/PX4/PX4-Autopilot/workflows/Nuttx%20Targets/badge.svg)](https://github.com/PX4/PX4-Autopilot/actions?query=workflow%3A%22Nuttx+Targets%22?branch=master) [![SITL Tests](https://github.com/PX4/PX4-Autopilot/workflows/SITL%20Tests/badge.svg?branch=master)](https://github.com/PX4/PX4-Autopilot/actions?query=workflow%3A%22SITL+Tests%22)
-
-[![Discord Shield](https://discordapp.com/api/guilds/1022170275984457759/widget.png?style=shield)](https://discord.gg/dronecode)
+# PX4 Autopilot with JSBSim
 
 This repository holds the [PX4](http://px4.io) flight control solution for drones, with the main applications located in the [src/modules](https://github.com/PX4/PX4-Autopilot/tree/main/src/modules) directory. It also contains the PX4 Drone Middleware Platform, which provides drivers and middleware to run drones.
 
-PX4 is highly portable, OS-independent and supports Linux, NuttX and MacOS out of the box.
+PX4 is highly portable, OS-independent and supports Linux, NuttX and MacOS out of the box. For out purposes at Mach, we will be configuring PX4 to run with our custom implementation of JSBSim with support for Viper.
 
-* Official Website: http://px4.io (License: BSD 3-clause, [LICENSE](https://github.com/PX4/PX4-Autopilot/blob/main/LICENSE))
-* [Supported airframes](https://docs.px4.io/main/en/airframes/airframe_reference.html) ([portfolio](https://px4.io/ecosystem/commercial-systems/)):
-  * [Multicopters](https://docs.px4.io/main/en/frames_multicopter/)
-  * [Fixed wing](https://docs.px4.io/main/en/frames_plane/)
-  * [VTOL](https://docs.px4.io/main/en/frames_vtol/)
-  * [Autogyro](https://docs.px4.io/main/en/frames_autogyro/)
-  * [Rover](https://docs.px4.io/main/en/frames_rover/)
-  * many more experimental types (Blimps, Boats, Submarines, High altitude balloons, etc)
-* Releases: [Downloads](https://github.com/PX4/PX4-Autopilot/releases)
+## Building PX4
+
+The [PX4 User Guide](https://docs.px4.io/main/en/) explains how to assemble [supported vehicles](https://docs.px4.io/main/en/airframes/airframe_reference.html) and fly drones with PX4. The relevant steps from that guide are outlined below. The links will take you to any relevant pages from the guide but all the steps you'll need are shown. These instructions are **only for Ubuntu Linux** at this time. Refer to the links at the bottom of the doc to find the MacOS and Windows instructions.
+
+### 1. Clone the forked PX4-Autopilot repo from Mach's GitHub
+```bash
+git clone git@github.com:machindustries/PX4-Autopilot-JSBS.git
+```
+
+### 2. Setup the Development Environment
+
+#### For [Ubuntu Linux](https://docs.px4.io/main/en/dev_setup/dev_env_windows_wsl.html):
+```bash
+bash ./PX4-Autopilot/Tools/setup/ubuntu.sh
+# restart your machine upon completion of this command
+```
+<!--
+#### For [MacOS](https://docs.px4.io/main/en/dev_setup/dev_env_mac.html) (untested):
+<details>
+  <summary>Apple M1 Macbook users!</summary>
+
+    If you have an Apple M1 Macbook, make sure to run the terminal as x86 by setting up an x86 terminal:
+
+    1. Locate the Terminal application within the Utilities folder (Finder > Go menu > Utilities)
+    2. Select Terminal.app and right-click on it, then choose Duplicate.
+    3. Rename the duplicated Terminal app, e.g. to x86 Terminal
+    4. Now select the renamed x86 Terminal app and right-click and choose *Get Info
+    5. Check the box for Open using Rosetta, then close the window
+    6. Run the x86 Terminal as usual, which will fully support the current PX4 toolchain  ## 1.1. Subsection
+
+</details>
+
+```bash
+# enable more open files by appending this to your ~/.zshenv file (create if necessary)
+echo ulimit -S -n 2048 >> ~/.zshenv
+
+# enforce Python 3 by appending the following to your ~/.zshenv
+# Point pip3 to MacOS system python 3 pip
+alias pip3=/usr/bin/pip3
+
+# install Homebrew if you do not already have it
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# install common tools
+brew tap PX4/px4
+brew install px4-dev
+
+# install required Python packages using pip3
+python3 -m pip install --user pyserial empty toml numpy pandas jinja2 pyyaml pyros-genmsg packaging kconfiglib future jsonschema
+# if this fails with a permissions error, your Python install is in a system path - use this command instead:
+sudo -H python3 -m pip install --user pyserial empty toml numpy pandas jinja2 pyyaml pyros-genmsg packaging kconfiglib future jsonschema
+
+```
+
+#### For [Windows (via WSL2)](https://docs.px4.io/main/en/dev_setup/dev_env_windows_wsl.html) -->
+
+### 3. [Download QGroundControl](https://docs.qgroundcontrol.com/master/en/qgc-user-guide/getting_started/download_and_install.html)
+
+#### For Ubuntu Linux
+```bash
+# enter the following in the terminal
+sudo usermod -a -G dialout $USER
+sudo apt-get remove modemmanager -y
+sudo apt install gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-gl -y
+sudo apt install libfuse2 -y
+sudo apt install libxcb-xinerama0 libxkbcommon-x11-0 libxcb-cursor0 -y
+
+# logout and log back in to enable the change to user permissions
+
+# download the QGroundControl application
+cd ~/Downloads
+sudo wget https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl.AppImage
+
+# make the file executable and run
+chmod +x ./QGroundControl.AppImage
+./QGroundControl.AppImage  (or double click)
+
+# once it runs you can kill it
+```
+
+<!-- #### For MacOS
+```bash
+# download the QGroundControl application
+brew install wget
+wget https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl.dmg
+# double click the .dmg file to mount it
+# drag it to your Application folder
+``` -->
+
+### 4. [Build PX4 with default JSBSim](https://docs.px4.io/main/en/sim_jsbsim/)
+
+#### For Ubuntu Linux (22.04)
+```bash
+# download the JSBSim development release
+sudo wget https://github.com/JSBSim-Team/jsbsim/releases/download/Linux/JSBSim-devel_1.2.1.dev1-1342.jammy.amd64.deb
+# install the package
+dpkg -i  JSBSim-devel_1.2.1.dev1-1342.jammy.amd64.deb
+
+# (optional) install FlightGear which we may try to use for visualization
+# TODO ADD INSTRUCTIONS IF WE ACTUALLY USE THIS
+```
+For other versions of Ubuntu, download and install the appropriate file from the [JSBSim release page](https://github.com/JSBSim-Team/jsbsim/releases/tag/Linux).
+
+#### Ensure that you can build and launch PX4 with JSBSim
+
+```bash
+# WINDOW 1: Launch QGC
+cd ~/Downloads
+./QGroundControl.AppImage
+```
+
+```bash
+# WINDOW 2: Build and run PX4 with JSBSim
+cd ~/PX4-Autopilot-JSBS
+make
+HEADLESS=1 make px4_sitl jsbsim
+```
+
+Without the `HEADLESS=1`, you will get a popup saying "The requested aircraft (Rascal110-JSBSim) could not be found. No aircraft paths are configured." This environment variable instructs PX4 to not use the visualization.
 
 
-## Building a PX4 based drone, rover, boat or robot
+### 5. Build PX4 with our custom JSBSim
 
-The [PX4 User Guide](https://docs.px4.io/main/en/) explains how to assemble [supported vehicles](https://docs.px4.io/main/en/airframes/airframe_reference.html) and fly drones with PX4.
-See the [forum and chat](https://docs.px4.io/main/en/#getting-help) if you need help!
-
-
-## Changing code and contributing
-
-This [Developer Guide](https://docs.px4.io/main/en/development/development.html) is for software developers who want to modify the flight stack and middleware (e.g. to add new flight modes), hardware integrators who want to support new flight controller boards and peripherals, and anyone who wants to get PX4 working on a new (unsupported) airframe/vehicle.
-
-Developers should read the [Guide for Contributions](https://docs.px4.io/main/en/contribute/).
-See the [forum and chat](https://docs.px4.io/main/en/#getting-help) if you need help!
+**working on this now ; )**
 
 
-### Weekly Dev Call
-
-The PX4 Dev Team syncs up on a [weekly dev call](https://docs.px4.io/main/en/contribute/).
-
-> **Note** The dev call is open to all interested developers (not just the core dev team). This is a great opportunity to meet the team and contribute to the ongoing development of the platform. It includes a QA session for newcomers. All regular calls are listed in the [Dronecode calendar](https://www.dronecode.org/calendar/).
 
 
-## Maintenance Team
+## Links
 
-Note: This is the source of truth for the active maintainers of PX4 ecosystem.
+- [PX4 simulation page](https://docs.px4.io/main/en/simulation/)
+- [PX4 JSBSim page](https://docs.px4.io/main/en/sim_jsbsim/)
+- [Original PX4 repo](https://github.com/PX4/PX4-Autopilot)
+- [PX4 Development - Getting Gtarted (refer here to find setup instructions for MacOS and Windows)](https://docs.px4.io/main/en/dev_setup/getting_started.html)
+- [QGroundControl Download/Install page](https://docs.qgroundcontrol.com/master/en/qgc-user-guide/getting_started/download_and_install.html)
 
-| Sector | Maintainer |
-|---|---|
-| Founder | [Lorenz Meier](https://github.com/LorenzMeier) |
-| Architecture | [Daniel Agar](https://github.com/dagar) / [Beat Küng](https://github.com/bkueng)|
-| State Estimation | [Mathieu Bresciani](https://github.com/bresch) / [Paul Riseborough](https://github.com/priseborough) |
-| OS/NuttX | [David Sidrane](https://github.com/davids5) |
-| Drivers | [Daniel Agar](https://github.com/dagar) |
-| Simulation | [Jaeyoung Lim](https://github.com/Jaeyoung-Lim) |
-| ROS2 | [Beniamino Pozzan](https://github.com/beniaminopozzan) |
-| Community QnA Call | [Ramon Roche](https://github.com/mrpollo) |
-| [Documentation](https://docs.px4.io/main/en/) | [Hamish Willee](https://github.com/hamishwillee) |
-
-| Vehicle Type | Maintainer |
-|---|---|
-| Multirotor | [Matthias Grob](https://github.com/MaEtUgR) |
-| Fixed Wing | [Thomas Stastny](https://github.com/tstastny) |
-| Hybrid VTOL | [Silvan Fuhrer](https://github.com/sfuhrer) |
-| Boat | x |
-| Rover | x |
-
-See also [maintainers list](https://px4.io/community/maintainers/) (px4.io) and the [contributors list](https://github.com/PX4/PX4-Autopilot/graphs/contributors) (Github). However it may be not up to date.
-
-## Supported Hardware
-
-Pixhawk standard boards and proprietary boards are shown below (discontinued boards aren't listed).
-
-For the most up to date information, please visit [PX4 user Guide > Autopilot Hardware](https://docs.px4.io/main/en/flight_controller/).
-
-### Pixhawk Standard Boards
-
-These boards fully comply with Pixhawk Standard, and are maintained by the PX4-Autopilot maintainers and Dronecode team
-
-* FMUv6X and FMUv6C
-  * [CUAV Pixahwk V6X (FMUv6X)](https://docs.px4.io/main/en/flight_controller/cuav_pixhawk_v6x.html)
-  * [Holybro Pixhawk 6X (FMUv6X)](https://docs.px4.io/main/en/flight_controller/pixhawk6x.html)
-  * [Holybro Pixhawk 6C (FMUv6C)](https://docs.px4.io/main/en/flight_controller/pixhawk6c.html)
-  * [Holybro Pix32 v6 (FMUv6C)](https://docs.px4.io/main/en/flight_controller/holybro_pix32_v6.html)
-* FMUv5 and FMUv5X (STM32F7, 2019/20)
-  * [Pixhawk 4 (FMUv5)](https://docs.px4.io/main/en/flight_controller/pixhawk4.html)
-  * [Pixhawk 4 mini (FMUv5)](https://docs.px4.io/main/en/flight_controller/pixhawk4_mini.html)
-  * [CUAV V5+ (FMUv5)](https://docs.px4.io/main/en/flight_controller/cuav_v5_plus.html)
-  * [CUAV V5 nano (FMUv5)](https://docs.px4.io/main/en/flight_controller/cuav_v5_nano.html)
-  * [Auterion Skynode (FMUv5X)](https://docs.auterion.com/avionics/skynode)
-* FMUv4 (STM32F4, 2015)
-  * [Pixracer](https://docs.px4.io/main/en/flight_controller/pixracer.html)
-  * [Pixhawk 3 Pro](https://docs.px4.io/main/en/flight_controller/pixhawk3_pro.html)
-* FMUv3 (STM32F4, 2014)
-  * [Pixhawk 2](https://docs.px4.io/main/en/flight_controller/pixhawk-2.html)
-  * [Pixhawk Mini](https://docs.px4.io/main/en/flight_controller/pixhawk_mini.html)
-  * [CUAV Pixhack v3](https://docs.px4.io/main/en/flight_controller/pixhack_v3.html)
-* FMUv2 (STM32F4, 2013)
-  * [Pixhawk](https://docs.px4.io/main/en/flight_controller/pixhawk.html)
-
-### Manufacturer supported
-
-These boards are maintained to be compatible with PX4-Autopilot by the Manufacturers.
-
-* [ARK Electronics ARKV6X](https://docs.px4.io/main/en/flight_controller/arkv6x.html)
-* [CubePilot Cube Orange+](https://docs.px4.io/main/en/flight_controller/cubepilot_cube_orangeplus.html)
-* [CubePilot Cube Orange](https://docs.px4.io/main/en/flight_controller/cubepilot_cube_orange.html)
-* [CubePilot Cube Yellow](https://docs.px4.io/main/en/flight_controller/cubepilot_cube_yellow.html)
-* [Holybro Durandal](https://docs.px4.io/main/en/flight_controller/durandal.html)
-* [Airmind MindPX V2.8](http://www.mindpx.net/assets/accessories/UserGuide_MindPX.pdf)
-* [Airmind MindRacer V1.2](http://mindpx.net/assets/accessories/mindracer_user_guide_v1.2.pdf)
-* [Holybro Kakute F7](https://docs.px4.io/main/en/flight_controller/kakutef7.html)
-
-### Community supported
-
-These boards don't fully comply industry standards, and thus is solely maintained by the PX4 public community members.
-
-### Experimental
-
-These boards are nor maintained by PX4 team nor Manufacturer, and is not guaranteed to be compatible with up to date PX4 releases.
-
-* [Raspberry PI with Navio 2](https://docs.px4.io/main/en/flight_controller/raspberry_pi_navio2.html)
-* [Bitcraze Crazyflie 2.0](https://docs.px4.io/main/en/complete_vehicles/crazyflie2.html)
-
-## Project Roadmap
-
-**Note: Outdated**
-
-A high level project roadmap is available [here](https://github.com/orgs/PX4/projects/25).
-
-## Project Governance
-
-The PX4 Autopilot project including all of its trademarks is hosted under [Dronecode](https://www.dronecode.org/), part of the Linux Foundation.
-
-<a href="https://www.dronecode.org/" style="padding:20px" ><img src="https://mavlink.io/assets/site/logo_dronecode.png" alt="Dronecode Logo" width="110px"/></a>
-<a href="https://www.linuxfoundation.org/projects" style="padding:20px;"><img src="https://mavlink.io/assets/site/logo_linux_foundation.png" alt="Linux Foundation Logo" width="80px" /></a>
-<div style="padding:10px">&nbsp;</div>
