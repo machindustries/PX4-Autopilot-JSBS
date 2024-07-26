@@ -4,9 +4,13 @@ This repository holds the [PX4](http://px4.io) flight control solution for drone
 
 PX4 is highly portable, OS-independent and supports Linux, NuttX and MacOS out of the box. For out purposes at Mach, we will be configuring PX4 to run with our custom implementation of JSBSim with support for Viper.
 
-## Building PX4
-
 The [PX4 User Guide](https://docs.px4.io/main/en/) explains how to assemble [supported vehicles](https://docs.px4.io/main/en/airframes/airframe_reference.html) and fly drones with PX4. The relevant steps from that guide are outlined below. The links will take you to any relevant pages from the guide but all the steps you'll need are shown. These instructions are **only for Ubuntu Linux** at this time. Refer to the links at the bottom of the doc to find the MacOS and Windows instructions.
+
+
+
+
+
+## <span style="color: #ffcc33 ;">Installations/Setup</span>
 
 ### 1. Clone the forked PX4-Autopilot repo from Mach's GitHub
 ```bash
@@ -93,7 +97,7 @@ wget https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl.dmg
 # drag it to your Application folder
 ``` -->
 
-### 4. [Build PX4 with default JSBSim](https://docs.px4.io/main/en/sim_jsbsim/)
+### 4. [Install default JSBSim](https://docs.px4.io/main/en/sim_jsbsim/)
 
 #### For Ubuntu Linux (22.04)
 ```bash
@@ -106,6 +110,17 @@ dpkg -i  JSBSim-devel_1.2.1.dev1-1342.jammy.amd64.deb
 # TODO ADD INSTRUCTIONS IF WE ACTUALLY USE THIS
 ```
 For other versions of Ubuntu, download and install the appropriate file from the [JSBSim release page](https://github.com/JSBSim-Team/jsbsim/releases/tag/Linux).
+
+
+
+
+
+
+
+
+## <span style="color: #ffcc33 ;">Building PX4</span>
+
+### 1. Build PX4 w/ default JSBSim
 
 #### Ensure that you can build and launch PX4 with JSBSim
 
@@ -125,9 +140,25 @@ HEADLESS=1 make px4_sitl jsbsim
 Without the `HEADLESS=1`, you will get a popup saying "The requested aircraft (Rascal110-JSBSim) could not be found. No aircraft paths are configured." This environment variable instructs PX4 to not use the visualization.
 
 
-### 5. Build PX4 with our custom JSBSim
+### 2. Build PX4 with our custom JSBSim
 
 **working on this now ; )**
+
+```bash
+# remove existing JSBSim installation
+sudo dpkg --remove jsbsim-devel
+```
+
+
+```bash
+# add some symbolic links
+sudo ln -s /usr/local/lib/libJSBSim.a /usr/lib/libJSBSim.a
+sudo ln -s /usr/local/include/JSBSim /usr/include/JSBSim
+```
+
+
+
+
 
 
 

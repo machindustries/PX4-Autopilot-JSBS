@@ -363,6 +363,8 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${ep_base}/Install/li
 link_directories(${ep_base}/Install/lib)
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${ep_base}/Install/include)
 include_directories(${ep_base}/Install/include)
+include_directories(/usr/local/include)
+
 
 #=============================================================================
 # external modules
