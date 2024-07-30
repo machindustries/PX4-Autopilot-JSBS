@@ -59,6 +59,9 @@ case "$model" in
         hexarotor_x)
             MODEL_NAME="hexarotor_x"
             ;;
+        viper)
+            MODEL_NAME="Viper-JSBSim"
+            ;;
         *)
             echo "Unknown Model"
             exit 1

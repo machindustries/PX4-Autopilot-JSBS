@@ -170,6 +170,8 @@ elif [ "$PX4_SIM_MODEL" = "jmavsim_iris" ] || [ "$(param show -q SYS_AUTOSTART)"
 
 else
 	# otherwise start simulator (mavlink) module
+	echo "INFO  [init] PX4_SIM_MODEL: ${PX4_SIM_MODEL}"
+	echo "INFO  [init] PX4_SIMULATOR: ${PX4_SIMULATOR}"
 
 	# EKF2 specifics
 	param set-default EKF2_GPS_DELAY 10

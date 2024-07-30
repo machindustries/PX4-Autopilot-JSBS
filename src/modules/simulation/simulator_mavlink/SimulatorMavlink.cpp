@@ -1131,6 +1131,8 @@ void SimulatorMavlink::run()
 		PX4_INFO("Waiting for simulator to accept connection on TCP port %u", _port);
 
 		while (true) {
+			// PX4_INFO("Trying to connect to TCP port %u", _port);
+
 			if ((_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 				PX4_ERR("Creating TCP socket failed: %s", strerror(errno));
 				return;
@@ -1152,6 +1154,9 @@ void SimulatorMavlink::run()
 			} else {
 				::close(_fd);
 				system_usleep(500);
+				// PX4_INFO("_fd %d, ret %d, errno %d", _fd, ret, errno);
+				// PX4_INFO("sockaddr: %s, %d", inet_ntoa(_myaddr.sin_addr), _myaddr.sin_port);
+				// system_usleep(50000000);
 			}
 		}
 
