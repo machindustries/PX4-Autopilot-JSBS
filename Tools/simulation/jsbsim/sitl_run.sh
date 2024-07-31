@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+echo "NOW RUNNING sitl_run.sh"
 
 set -e
 
@@ -37,7 +38,7 @@ else
 	no_pxh=""
 fi
 
-if [ -n $FG_BINARY ]; then
+if [ -z $FG_BINARY ]; then
     FG_BINARY=fgfs
 fi
 
@@ -60,6 +61,7 @@ case "$model" in
             MODEL_NAME="hexarotor_x"
             ;;
         viper)
+            # MODEL_NAME="Rascal110-JSBSim"
             MODEL_NAME="Viper-JSBSim"
             ;;
         *)

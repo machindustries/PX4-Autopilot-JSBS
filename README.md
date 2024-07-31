@@ -14,12 +14,13 @@ The [PX4 User Guide](https://docs.px4.io/main/en/) explains how to assemble [sup
 
 ### 1. Clone the forked PX4-Autopilot repo from Mach's GitHub
 ```bash
-git clone git@github.com:machindustries/PX4-Autopilot-JSBS.git
+# --recursive tag will include the necessary submodules
+git clone --recursive git@github.com:machindustries/PX4-Autopilot-JSBS.git
 ```
 
 ### 2. Setup the Development Environment
 
-#### For [Ubuntu Linux](https://docs.px4.io/main/en/dev_setup/dev_env_windows_wsl.html):
+#### For [Ubuntu Linux](:https://docs.px4.io/main/en/dev_setup/dev_env_windows_wsl.html)
 ```bash
 bash ./PX4-Autopilot/Tools/setup/ubuntu.sh
 # restart your machine upon completion of this command
@@ -147,9 +148,25 @@ Without the `HEADLESS=1`, you will get a popup saying "The requested aircraft (R
 ```bash
 # remove existing JSBSim installation
 sudo dpkg --remove jsbsim-devel
+
+# build and install the custom JSBSim
+git clone git@github.com:machindustries/jsbsim.git
+cd ~/jsbsim
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
 ```
 
+Take note of the output from running `sudo make install`. My machine defaulted to adding the install at `/usr/local/include/JSBSim/`.
 
+<!-- Add the following line to your .bashrc file:
+```bash
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+``` -->
+
+Finally, add some symbolic links so that you don't have to move the JSBSim install from the default location. (will need to alter these slightly if `sudo make install` placed the directory somewhere other than `usr/local/include/JSBSim`)
 ```bash
 # add some symbolic links
 sudo ln -s /usr/local/lib/libJSBSim.a /usr/lib/libJSBSim.a
