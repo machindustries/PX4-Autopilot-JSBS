@@ -183,7 +183,7 @@ else
 
 	simulator_tcp_port=$((4560+px4_instance))
 
-	echo "INFO  [init] Starting simulator with TCP port $simulator_tcp_port"
+	echo "INFO  [init] Trying to start simulator with TCP port $simulator_tcp_port"
 
 	# Check if PX4_SIM_HOSTNAME environment variable is empty
 	# If empty check if PX4_SIM_HOST_ADDR environment variable is empty

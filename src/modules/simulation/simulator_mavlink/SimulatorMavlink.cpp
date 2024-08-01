@@ -1160,6 +1160,7 @@ void SimulatorMavlink::run()
 				// print ret
 				// PX4_INFO("TCP connect failed: %s", strerror(errno));
 				// PX4_INFO("ret: %d", ret);
+				// PX4_ERR("TCP connect failed: %s", strerror(errno));
 				::close(_fd);
 				system_usleep(500);
 				// PX4_INFO("_fd %d, ret %d, errno %d", _fd, ret, errno);
