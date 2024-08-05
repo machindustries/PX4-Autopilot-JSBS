@@ -1,39 +1,46 @@
 #!/bin/sh
 #
-# @name Plane SITL
+# @name Viper SITL
 #
-# this file is currently the exact same as the 1033_jsbsim_rascal and 1036_jsbsim_malolo files
 
 . ${R}etc/init.d/rc.fw_defaults
 
-param set-default FW_LND_ANG 5
-param set-default FW_LND_FL_PMIN 9.5
-param set-default FW_LND_FL_PMAX 20
-param set-default FW_LND_FLALT 5
+# Landing parameters
+param set-default FW_LND_ANG 3  # Adjusted for Viper's landing approach
+param set-default FW_LND_FL_PMIN 5
+param set-default FW_LND_FL_PMAX 15
+param set-default FW_LND_FLALT 10
 
-param set-default NPFG_PERIOD 25
+# Control gains
+param set-default NPFG_PERIOD 20
 
-param set-default FW_PR_FF 0.40
-param set-default FW_PR_I 0.05
-param set-default FW_PR_P 0.05
+# Pitch control
+param set-default FW_PR_FF 0.35  # Adjusted feedforward gain
+param set-default FW_PR_I 0.05   # Integral gain remains same
+param set-default FW_PR_P 0.08   # Adjusted proportional gain
 
-param set-default FW_R_TC 0.45
-param set-default FW_RR_FF 0.40
-param set-default FW_RR_I 0.132
-param set-default FW_RR_P 0.085
+# Roll control
+param set-default FW_R_TC 0.5
+param set-default FW_RR_FF 0.35  # Adjusted feedforward gain
+param set-default FW_RR_I 0.1    # Adjusted integral gain
+param set-default FW_RR_P 0.08   # Adjusted proportional gain
 
+# Wind estimation
 param set-default FW_W_EN 1
 
-param set-default MIS_TAKEOFF_ALT 20
-
-param set-default NAV_ACC_RAD 15
+# Mission and navigation parameters
+param set-default MIS_TAKEOFF_ALT 30
+param set-default NAV_ACC_RAD 10
 param set-default NAV_DLL_ACT 2
 
+# Runway takeoff
 param set-default RWTO_TKOFF 1
-param set-default RWTO_PSP 8
+param set-default RWTO_PSP 5
 
+# Custom airframe parameters
 param set-default CA_AIRFRAME 1
 
+# Rotor and control surface configuration (adjusted for Viper's specific layout)
 param set-default CA_ROTOR_COUNT 1
 param set-default CA_ROTOR0_PX 0.3
 
@@ -56,4 +63,3 @@ param set-default PWM_MAIN_FUNC7 202
 param set-default PWM_MAIN_FUNC8 203
 param set-default PWM_MAIN_FUNC9 206
 param set-default PWM_MAIN_REV 256
-

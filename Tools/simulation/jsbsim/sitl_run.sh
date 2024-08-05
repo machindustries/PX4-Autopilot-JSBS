@@ -61,7 +61,6 @@ case "$model" in
             MODEL_NAME="hexarotor_x"
             ;;
         viper)
-            # MODEL_NAME="Rascal110-JSBSim"
             MODEL_NAME="Viper-JSBSim"
             ;;
         *)
