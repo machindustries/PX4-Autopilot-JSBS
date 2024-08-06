@@ -1131,8 +1131,6 @@ void SimulatorMavlink::run()
 		PX4_INFO("Waiting for simulator to accept connection on TCP port %u", _port);
 
 		while (true) {
-			// PX4_INFO("Trying to connect to TCP port %u", _port);
-
 			if ((_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 				PX4_ERR("Creating TCP socket failed: %s", strerror(errno));
 				return;
@@ -1140,31 +1138,20 @@ void SimulatorMavlink::run()
 
 			int yes = 1;
 			int ret = setsockopt(_fd, IPPROTO_TCP, TCP_NODELAY, (char *) &yes, sizeof(int));
-			// PX4_INFO("setsockopt %d", ret);
 
 			if (ret != 0) {
 				PX4_ERR("setsockopt failed: %s", strerror(errno));
 			}
 
 			socklen_t myaddr_len = sizeof(_myaddr);
-			// PX4_INFO("myaddr_len %d", myaddr_len);
-			// print the info we are passing to connect
-			// PX4_INFO("_fd %d, myaddr: %s, %d", _fd, inet_ntoa(_myaddr.sin_addr), _myaddr.sin_port);
-			ret = connect(_fd, (struct sockaddr *)&_myaddr, myaddr_len); // THIS IS THE LINE THAT IS FAILING
-			// PX4_INFO("connect returned %d", ret);
+			ret = connect(_fd, (struct sockaddr *)&_myaddr, myaddr_len);
 
 			if (ret == 0) {
 				break;
 
 			} else {
-				// print ret
-				// PX4_INFO("TCP connect failed: %s", strerror(errno));
-				// PX4_INFO("ret: %d", ret);
 				::close(_fd);
 				system_usleep(500);
-				// PX4_INFO("_fd %d, ret %d, errno %d", _fd, ret, errno);
-				// PX4_INFO("sockaddr: %s, %d", inet_ntoa(_myaddr.sin_addr), _myaddr.sin_port);
-				// system_usleep(50000000);
 			}
 		}
 

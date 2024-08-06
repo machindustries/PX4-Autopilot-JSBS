@@ -38,6 +38,7 @@ else
 	no_pxh=""
 fi
 
+# Check if FG_BINARY is an empty string
 if [ -z $FG_BINARY ]; then
     FG_BINARY=fgfs
 fi
