@@ -38,6 +38,7 @@ else
 	no_pxh=""
 fi
 
+# Check if FG_BINARY is an empty string
 if [ -z $FG_BINARY ]; then
     FG_BINARY=fgfs
 fi
@@ -61,7 +62,6 @@ case "$model" in
             MODEL_NAME="hexarotor_x"
             ;;
         viper)
-            # MODEL_NAME="Rascal110-JSBSim"
             MODEL_NAME="Viper-JSBSim"
             ;;
         *)
