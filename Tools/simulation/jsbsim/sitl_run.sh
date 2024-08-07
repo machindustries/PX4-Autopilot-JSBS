@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+echo "NOW RUNNING sitl_run.sh"
 
 set -e
 
@@ -37,7 +38,8 @@ else
 	no_pxh=""
 fi
 
-if [ -n $FG_BINARY ]; then
+# Check if FG_BINARY is an empty string
+if [ -z $FG_BINARY ]; then
     FG_BINARY=fgfs
 fi
 
@@ -58,6 +60,9 @@ case "$model" in
             ;;
         hexarotor_x)
             MODEL_NAME="hexarotor_x"
+            ;;
+        viper)
+            MODEL_NAME="Viper-JSBSim"
             ;;
         *)
             echo "Unknown Model"
